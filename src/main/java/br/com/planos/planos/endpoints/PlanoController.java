@@ -1,25 +1,64 @@
 package br.com.planos.planos.endpoints;
 
 
+import br.com.planos.planos.endpoints.form.PlanoForm;
 import br.com.planos.planos.models.Plano;
-import br.com.planos.planos.service.interfaces.PlanoServiceInterface;
+import br.com.planos.planos.models.converter.StringToEnumConverter;
+import br.com.planos.planos.repository.DDDRepository;
+import br.com.planos.planos.repository.OperadoraRepository;
+import br.com.planos.planos.repository.PlanoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import javax.transaction.Transactional;
+import java.net.URI;
+import java.util.HashSet;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/plano")
 public class PlanoController {
 
     @Autowired
-    private PlanoServiceInterface planoService;
+    private PlanoRepository planoRepository;
+
+    @Autowired
+    private OperadoraRepository operadoraRepository;
+
+    @Autowired
+    private DDDRepository dddRepository;
 
     @GetMapping("/{id}")
     public ResponseEntity<Plano> findById(@PathVariable Long id){
-        return new ResponseEntity<>(planoService.findById(id).get(), HttpStatus.OK);
+        return new ResponseEntity<>(planoRepository.findById(id).orElseThrow(NullPointerException::new), HttpStatus.OK);
     }
+
+    @GetMapping
+    public ResponseEntity<Set<Plano>> findByTipoOrOperadora(
+        @RequestParam(required = false) String operadora,
+        @RequestParam(required = false) String tipo
+        //@RequestParam Long ddd
+    ){
+        Set<Plano> planos = new HashSet<>();
+
+
+        if(operadora!=null) planos.addAll(planoRepository.findByOperadoraName(operadora));
+        if(tipo!=null) planos.addAll(planoRepository.findByTipo(new StringToEnumConverter().convert(tipo)));
+
+        return new ResponseEntity<>(planos, HttpStatus.OK);
+    }
+
+    @PostMapping
+    @Transactional
+    public ResponseEntity<Plano> cadastrar(@RequestBody PlanoForm form, UriComponentsBuilder uriBuilder){
+        Plano plano = form.converter(operadoraRepository, dddRepository);
+        planoRepository.save(plano);
+        URI uri = uriBuilder.path("/plano/{id}").buildAndExpand(plano.getId()).toUri();
+
+        return  ResponseEntity.created(uri).body(plano);
+    }
+
 }

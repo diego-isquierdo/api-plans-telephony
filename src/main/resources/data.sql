@@ -3,7 +3,7 @@ INSERT INTO OPERADORA(name) VALUES('vivo');
 INSERT INTO OPERADORA(name) VALUES('oi');
 INSERT INTO OPERADORA(name) VALUES('claro');
 
-INSERT INTO DDD(codigo, name) VALUES(47, 'SC Note');
+INSERT INTO DDD(codigo, name) VALUES(47, 'SC Norte');
 INSERT INTO DDD(codigo, name) VALUES(51, 'RS POA');
 INSERT INTO DDD(codigo, name) VALUES(41, 'PR CTB');
 INSERT INTO DDD(codigo, name) VALUES(11, 'SP Capital');

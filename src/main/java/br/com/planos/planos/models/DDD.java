@@ -25,7 +25,7 @@ public class DDD {
     @NotNull
     private String name;
 
-    @ManyToMany
+    @ManyToMany(mappedBy = "ddd") 
     private List<Plano> plano;
 
 }
