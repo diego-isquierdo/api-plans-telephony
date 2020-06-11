@@ -1,5 +1,6 @@
 package br.com.planos.planos.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -29,9 +30,15 @@ public class Plano {
     @NotNull
     private BigDecimal valor;
 
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private Tipo tipo;
+
+    @JsonIgnore
     @ManyToOne
     private Operadora operadora;
 
+    @JsonIgnore
     @ManyToMany
     private List<DDD> ddd;
 
