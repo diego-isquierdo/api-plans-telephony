@@ -2,6 +2,7 @@ package br.com.planos.planos.endpoints;
 
 
 import br.com.planos.planos.endpoints.dto.PlanoDto;
+import br.com.planos.planos.endpoints.form.AtualizaPlanoForm;
 import br.com.planos.planos.endpoints.form.PlanoForm;
 import br.com.planos.planos.models.Plano;
 import br.com.planos.planos.models.converter.StringToEnumConverter;
@@ -55,6 +56,7 @@ public class PlanoController {
         return new ResponseEntity<>(PlanoDto.converter(planos), HttpStatus.OK);
     }
 
+
     @PostMapping
     @Transactional
     public ResponseEntity<Plano> cadastrar(@RequestBody PlanoForm form, UriComponentsBuilder uriBuilder){
@@ -65,6 +67,18 @@ public class PlanoController {
         return  ResponseEntity.created(uri).body(plano);
     }
 
+
+    @PutMapping("/{id}")
+    @Transactional
+    public ResponseEntity<PlanoDto> atualizar(@PathVariable Long id, @RequestBody AtualizaPlanoForm form){
+        if(planoRepository.findById(id).isPresent()){
+            Plano plano = form.atualizar(id, planoRepository);
+            return ResponseEntity.ok(new PlanoDto(plano));
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+
     @DeleteMapping("/{id}")
     @Transactional
     public ResponseEntity<?> remover(@PathVariable Long id){
@@ -74,7 +88,5 @@ public class PlanoController {
         }
         return ResponseEntity.notFound().build();
     }
-
-
 
 }
