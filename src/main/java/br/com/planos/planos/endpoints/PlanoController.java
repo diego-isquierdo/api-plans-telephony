@@ -65,4 +65,16 @@ public class PlanoController {
         return  ResponseEntity.created(uri).body(plano);
     }
 
+    @DeleteMapping("/{id}")
+    @Transactional
+    public ResponseEntity<?> remover(@PathVariable Long id){
+        if(planoRepository.findById(id).isPresent()){
+            planoRepository.deleteById(id);
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+
+
 }

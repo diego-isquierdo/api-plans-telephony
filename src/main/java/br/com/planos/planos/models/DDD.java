@@ -6,10 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.*;
 import java.util.List;
 
 @Entity
@@ -25,7 +22,7 @@ public class DDD {
     @NotNull
     private String name;
 
-    @ManyToMany(mappedBy = "ddd") 
+    @ManyToMany(fetch = FetchType.LAZY,mappedBy = "ddd", cascade = CascadeType.PERSIST)
     private List<Plano> plano;
 
 }

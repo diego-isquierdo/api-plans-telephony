@@ -45,7 +45,7 @@ public class Plano {
     private LocalDateTime dataCriacao = LocalDateTime.now();
 
     @JsonIgnore
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.LAZY,cascade = CascadeType.PERSIST)
     @JoinTable(name = "DDD_PLANO",
             joinColumns = {@JoinColumn(name="PLANO_ID")},
             inverseJoinColumns = {@JoinColumn(name = "DDD_CODIGO")})
