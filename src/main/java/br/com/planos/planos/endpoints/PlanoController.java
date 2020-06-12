@@ -1,6 +1,7 @@
 package br.com.planos.planos.endpoints;
 
 
+import br.com.planos.planos.endpoints.dto.PlanoDto;
 import br.com.planos.planos.endpoints.form.PlanoForm;
 import br.com.planos.planos.models.Plano;
 import br.com.planos.planos.models.converter.StringToEnumConverter;
@@ -16,6 +17,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import javax.transaction.Transactional;
 import java.net.URI;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @RestController
@@ -31,24 +33,26 @@ public class PlanoController {
     @Autowired
     private DDDRepository dddRepository;
 
+
     @GetMapping("/{id}")
-    public ResponseEntity<Plano> findById(@PathVariable Long id){
-        return new ResponseEntity<>(planoRepository.findById(id).orElseThrow(NullPointerException::new), HttpStatus.OK);
+    public ResponseEntity<PlanoDto> findById(@PathVariable Long id){
+        Optional<Plano> plano = planoRepository.findById(id);
+        return ResponseEntity.ok(new PlanoDto(plano.get()));
     }
 
+
     @GetMapping
-    public ResponseEntity<Set<Plano>> findByTipoOrOperadora(
+    public ResponseEntity<Set<PlanoDto>> findByTipoOrOperadora(
         @RequestParam(required = false) String operadora,
         @RequestParam(required = false) String tipo
         //@RequestParam Long ddd
     ){
         Set<Plano> planos = new HashSet<>();
 
-
         if(operadora!=null) planos.addAll(planoRepository.findByOperadoraName(operadora));
         if(tipo!=null) planos.addAll(planoRepository.findByTipo(new StringToEnumConverter().convert(tipo)));
 
-        return new ResponseEntity<>(planos, HttpStatus.OK);
+        return new ResponseEntity<>(PlanoDto.converter(planos), HttpStatus.OK);
     }
 
     @PostMapping
