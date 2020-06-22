@@ -1,12 +1,12 @@
 package br.com.planos.planos.endpoints.form;
 
 import br.com.planos.planos.models.DDD;
-import br.com.planos.planos.models.Operadora;
-import br.com.planos.planos.models.Plano;
-import br.com.planos.planos.models.Tipo;
+import br.com.planos.planos.models.Operator;
+import br.com.planos.planos.models.Plan;
+import br.com.planos.planos.models.Type;
 import br.com.planos.planos.models.converter.StringToEnumConverter;
 import br.com.planos.planos.repository.DDDRepository;
-import br.com.planos.planos.repository.OperadoraRepository;
+import br.com.planos.planos.repository.OperatorRepository;
 import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,34 +20,34 @@ import java.util.List;
 @Data
 public class PlanoForm {
     @NotNull
-    private Long minutos;
+    private Long minutes;
 
     @NotNull
-    private String franquia;
+    private String franchise;
 
     @NotNull
-    private BigDecimal valor;
+    private BigDecimal value;
 
     @NotNull
-    private String tipo;
+    private String type;
 
     @NotNull
-    private Long operadoraId;
+    private Long operatorId;
 
     @NotNull
     private List<Long> dddList;
 
-    public Plano converter(
-            OperadoraRepository operadoraRopository,
+    public Plan converter(
+            OperatorRepository operatorRopository,
             DDDRepository dddRepository){
 
-        Tipo tipoEnum = new StringToEnumConverter().convert(tipo);
-        Operadora operadora = operadoraRopository
-                                    .findById(operadoraId)
+        Type typeEnum = new StringToEnumConverter().convert(type);
+        Operator operator = operatorRopository
+                                    .findById(operatorId)
                                     .orElseThrow(NullPointerException::new);
         List<DDD> ddd = new ArrayList<>();
         dddList.forEach(id->dddRepository.findById(id).ifPresent(ddd::add));
 
-        return new Plano(minutos, franquia,valor,tipoEnum, operadora, ddd);
+        return new Plan(minutes, franchise, value, typeEnum, operator, ddd);
     }
 }

@@ -16,12 +16,12 @@ import java.util.List;
 public class DDD {
 
     @Id
-    private Long codigo;
+    private Long code;
 
     @NotNull
     private String name;
 
     @ManyToMany(fetch = FetchType.LAZY,mappedBy = "ddd", cascade = CascadeType.PERSIST)
-    private List<Plano> plano;
+    private List<Plan> plan;
 
 }

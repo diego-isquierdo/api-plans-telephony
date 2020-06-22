@@ -15,7 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 @EntityListeners(AuditingEntityListener.class)
-public class Operadora {
+public class Operator {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,7 +26,7 @@ public class Operadora {
     private String name;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "operadora")
-    private List<Plano> planos;
+    @OneToMany(mappedBy = "operator")
+    private List<Plan> plans;
 
 }

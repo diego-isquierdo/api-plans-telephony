@@ -1,5 +1,5 @@
 package br.com.planos.planos.models;
 
-public enum Tipo {
+public enum Type {
     CONTROLE, PRE, POS;
 }

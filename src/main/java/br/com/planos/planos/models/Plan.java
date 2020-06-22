@@ -18,50 +18,51 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 @EntityListeners(AuditingEntityListener.class)
-public class Plano {
+public class Plan {
+    public Plan(Long minutes,
+                String franchise,
+                BigDecimal value,
+                Type type,
+                Operator operator,
+                List<DDD> ddd) {
+        this.minutes = minutes;
+        this.franchise = franchise;
+        this.value = value;
+        this.type = type;
+        this.operator = operator;
+        this.ddd = ddd;
+    }
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotNull
-    private Long minutos;
+    private Long minutes;
 
     @NotNull
-    private String franquia;
+    private String franchise;
 
     @NotNull
-    private BigDecimal valor;
+    private BigDecimal value;
 
     @NotNull
     @Enumerated(EnumType.STRING)
-    private Tipo tipo;
+    private Type type;
 
     @JsonIgnore
     @ManyToOne
-    private Operadora operadora;
+    private Operator operator;
 
     @CreatedDate
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
-    private LocalDateTime dataCriacao = LocalDateTime.now();
+    private LocalDateTime createDate = LocalDateTime.now();
 
     @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY,cascade = CascadeType.PERSIST)
-    @JoinTable(name = "DDD_PLANO",
-            joinColumns = {@JoinColumn(name="PLANO_ID")},
-            inverseJoinColumns = {@JoinColumn(name = "DDD_CODIGO")})
+    @JoinTable(name = "DDD_PLAN",
+            joinColumns = {@JoinColumn(name="PLAN_ID")},
+            inverseJoinColumns = {@JoinColumn(name = "DDD_CODE")})
     private List<DDD> ddd;
 
-    public Plano(Long minutos,
-                 String franquia,
-                 BigDecimal valor,
-                 Tipo tipo,
-                 Operadora operadora,
-                 List<DDD> ddd) {
-        this.minutos = minutos;
-        this.franquia = franquia;
-        this.valor = valor;
-        this.tipo = tipo;
-        this.operadora = operadora;
-        this.ddd = ddd;
-    }
+
 }

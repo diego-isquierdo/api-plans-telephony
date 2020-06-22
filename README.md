@@ -1,6 +1,6 @@
-<h1>Api-planos-telefonia</h1>
+<h1>Api-plans-telefonia</h1>
 
-<h2>API para efetuar Consulta, cadastro remoção e atualização de planos de telefonia</h2>
+<h2>API para efetuar Consulta, cadastro remoção e atualização de plans de telefonia</h2>
 
 <h3>Funcionalidades</h3>
 </br>
@@ -8,25 +8,25 @@
 <p>Consulta por Primary Key</p>
     @GetMapping("/{id}")
     public ResponseEntity<PlanoDto> findById(@PathVariable Long id){
-        Optional<Plano> plano = planoRepository.findById(id);
-        return ResponseEntity.ok(new PlanoDto(plano.get()));
+        Optional<Plano> plan = planRepository.findById(id);
+        return ResponseEntity.ok(new PlanoDto(plan.get()));
     }
 </br>
 </br>
 <p>Consulta por Operadora</p>
-<p>Consulta por Tipo de plano</p>
+<p>Consulta por Tipo de plan</p>
  @GetMapping
     public ResponseEntity<Set<PlanoDto>> findByTipoOrOperadora(
-        @RequestParam(required = false) String operadora,
-        @RequestParam(required = false) String tipo
+        @RequestParam(required = false) String operator,
+        @RequestParam(required = false) String type
         //@RequestParam Long ddd
     ){
-        Set<Plano> planos = new HashSet<>();
+        Set<Plano> plans = new HashSet<>();
 
-        if(operadora!=null) planos.addAll(planoRepository.findByOperadoraName(operadora));
-        if(tipo!=null) planos.addAll(planoRepository.findByTipo(new StringToEnumConverter().convert(tipo)));
+        if(operator!=null) plans.addAll(planRepository.findByOperadoraName(operator));
+        if(type!=null) plans.addAll(planRepository.findByTipo(new StringToEnumConverter().convert(type)));
 
-        return new ResponseEntity<>(PlanoDto.converter(planos), HttpStatus.OK);
+        return new ResponseEntity<>(PlanoDto.converter(plans), HttpStatus.OK);
     }
 </br>
 </br>
@@ -35,11 +35,11 @@
     @PostMapping
     @Transactional
     public ResponseEntity<Plano> cadastrar(@RequestBody PlanoForm form, UriComponentsBuilder uriBuilder){
-        Plano plano = form.converter(operadoraRepository, dddRepository);
-        planoRepository.save(plano);
-        URI uri = uriBuilder.path("/plano/{id}").buildAndExpand(plano.getId()).toUri();
+        Plano plan = form.converter(operadoraRepository, dddRepository);
+        planRepository.save(plan);
+        URI uri = uriBuilder.path("/plan/{id}").buildAndExpand(plan.getId()).toUri();
 
-        return  ResponseEntity.created(uri).body(plano);
+        return  ResponseEntity.created(uri).body(plan);
     }
 </br>
 </br>
@@ -48,21 +48,21 @@
    @PutMapping("/{id}")
     @Transactional
     public ResponseEntity<PlanoDto> atualizar(@PathVariable Long id, @RequestBody AtualizaPlanoForm form){
-        if(planoRepository.findById(id).isPresent()){
-            Plano plano = form.atualizar(id, planoRepository);
-            return ResponseEntity.ok(new PlanoDto(plano));
+        if(planRepository.findById(id).isPresent()){
+            Plano plan = form.atualizar(id, planRepository);
+            return ResponseEntity.ok(new PlanoDto(plan));
         }
         return ResponseEntity.notFound().build();
     }
 </br>
 </br>
 <h4>Remoção de Planos de telefonia</h4>
-<p>Remoção de planos via DELETE, passando id por parâmetro</p>
+<p>Remoção de plans via DELETE, passando id por parâmetro</p>
     @DeleteMapping("/{id}")
     @Transactional
     public ResponseEntity<?> remover(@PathVariable Long id){
-        if(planoRepository.findById(id).isPresent()){
-            planoRepository.deleteById(id);
+        if(planRepository.findById(id).isPresent()){
+            planRepository.deleteById(id);
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.notFound().build();
