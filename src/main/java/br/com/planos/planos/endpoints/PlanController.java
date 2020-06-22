@@ -10,6 +10,10 @@ import br.com.planos.planos.repository.DDDRepository;
 import br.com.planos.planos.repository.OperatorRepository;
 import br.com.planos.planos.service.PlanService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,7 +38,6 @@ public class PlanController {
     @Autowired
     private DDDRepository dddRepository;
 
-
     @GetMapping("/{id}")
     public ResponseEntity<PlanDto> findById(@PathVariable Long id){
         Optional<Plan> plano = planService.findById(id);
@@ -43,17 +46,22 @@ public class PlanController {
 
 
     @GetMapping
-    public ResponseEntity<Set<PlanDto>> findByTypeOrOperator(
-        @RequestParam(required = false) String operator,
-        @RequestParam(required = false) String type
-        //@RequestParam Long ddd
+    public Page<PlanDto> list(
+            @RequestParam(required = false) String operator,
+            @RequestParam(required = false) String type,
+            @PageableDefault(size = 2)Pageable pageable
     ){
-        Set<Plan> plans = new HashSet<>();
 
-        if(operator!=null) plans.addAll(planService.findByOperatorName(operator));
-        if(type!=null) plans.addAll(planService.findByType(new StringToEnumConverter().convert(type)));
+        if(operator!=null) {
+            Page<Plan> plans = new PageImpl<Plan>(planService.findByOperatorName(operator));
+            return PlanDto.converter(plans);
+        }
+        if(type!=null) {
+            Page<Plan> plans = new PageImpl<>(planService.findByType(new StringToEnumConverter().convert(type)));
+            return PlanDto.converter(plans);
+        }
 
-        return new ResponseEntity<>(PlanDto.converter(plans), HttpStatus.OK);
+        return PlanDto.converter(planService.findAll(pageable));
     }
 
 
@@ -88,5 +96,4 @@ public class PlanController {
         }
         return ResponseEntity.notFound().build();
     }
-
 }
