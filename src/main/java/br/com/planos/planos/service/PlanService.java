@@ -1,14 +1,15 @@
 package br.com.planos.planos.service;
 
-import br.com.planos.planos.endpoints.dto.PlanDto;
-import br.com.planos.planos.endpoints.form.PlanoForm;
+
 import br.com.planos.planos.models.Plan;
 import br.com.planos.planos.models.Type;
 import br.com.planos.planos.repository.PlanRepository;
 import br.com.planos.planos.service.interfaces.PlanServiceInterface;
 import lombok.AllArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
 
 import java.util.List;
 import java.util.Optional;
@@ -31,8 +32,6 @@ public class PlanService implements PlanServiceInterface {
 
     @Override
     public List<Plan> findByOperatorName(String name) {
-        Plan plan = new Plan();
-        planRepository.save(plan);
         return planRepository.findByOperatorName(name);
     }
 
@@ -48,4 +47,6 @@ public class PlanService implements PlanServiceInterface {
     public void deleteById(Long id) {
         planRepository.deleteById(id);
     }
+
+    public Page<Plan> findAll(Pageable pageable) { return planRepository.findAll(pageable); }
 }

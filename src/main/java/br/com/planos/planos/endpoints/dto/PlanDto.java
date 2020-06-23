@@ -3,6 +3,7 @@ package br.com.planos.planos.endpoints.dto;
 
 import br.com.planos.planos.models.Plan;
 import lombok.Getter;
+import org.springframework.data.domain.Page;
 
 import java.math.BigDecimal;
 import java.util.Set;
@@ -22,8 +23,8 @@ public class PlanDto {
     private String franchise;
     private BigDecimal value;
 
-    public static Set<PlanDto> converter(Set<Plan> plans){
-        return plans.stream().map(PlanDto::new).collect(Collectors.toSet());
+    public static Page<PlanDto> converter(Page<Plan> plans){
+        return plans.map(PlanDto::new);
     }
 
 }

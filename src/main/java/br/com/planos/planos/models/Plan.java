@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.PositiveOrZero;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -37,12 +39,15 @@ public class Plan {
     private Long id;
 
     @NotNull
+    @PositiveOrZero
     private Long minutes;
 
     @NotNull
+    @NotBlank(message = "necessary to inform franchise")
     private String franchise;
 
     @NotNull
+    @PositiveOrZero
     private BigDecimal value;
 
     @NotNull
