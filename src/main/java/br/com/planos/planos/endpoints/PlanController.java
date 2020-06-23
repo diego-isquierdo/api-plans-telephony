@@ -39,8 +39,8 @@ public class PlanController {
 
     @GetMapping("/{id}")
     public ResponseEntity<PlanDto> findById(@PathVariable Long id){
-        Optional<Plan> plano = planService.findById(id);
-        return ResponseEntity.ok(new PlanDto(plano.get()));
+        Optional<Plan> plan = planService.findById(id);
+        return ResponseEntity.ok(new PlanDto(plan.get()));
     }
 
 
