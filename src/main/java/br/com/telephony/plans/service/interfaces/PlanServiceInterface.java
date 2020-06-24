@@ -9,12 +9,8 @@ import java.util.Optional;
 
 public interface PlanServiceInterface extends ServiceInterface<Plan> {
     Optional<Plan> findById(Long id);
-
-    List<Plan> findByType(Type type);
-
-    List<Plan> findByCarrierName(String name);
-
+    List<Plan> findByDDD(Long ddd);
     Plan save(Plan plan);
-
-    Page<Plan> findAll(Pageable pageable);
+    List<Plan> findByTypeAndDDD(Long ddd, Type type);
+    List<Plan> findByCarrierAndDDD(Long ddd, String carrier);
 }

@@ -26,19 +26,25 @@ public class PlanService implements PlanServiceInterface {
     }
 
     @Override
-    public List<Plan> findByType(Type type) {
-        return planRepository.findByType(type);
-    }
-
-    @Override
-    public List<Plan> findByCarrierName(String name) {
-        return planRepository.findByCarrierName(name);
-    }
-
-    @Override
     public Plan save(Plan plan) {
         return planRepository.save(plan);
     }
+
+    @Override
+    public List<Plan> findByTypeAndDDD(Long ddd, Type type) {
+        return planRepository.findByTypeAndDDD(ddd, type);
+    }
+
+    @Override
+    public List<Plan> findByCarrierAndDDD(Long ddd, String carrier) {
+        return planRepository.findByCarrierAndDDD(ddd, carrier);
+    }
+
+    @Override
+    public List<Plan> findByDDD(Long ddd) {
+        return planRepository.findByDDD(ddd);
+    }
+
 
     public Plan getOne(Long id) {
         return planRepository.getOne(id);
@@ -47,6 +53,4 @@ public class PlanService implements PlanServiceInterface {
     public void deleteById(Long id) {
         planRepository.deleteById(id);
     }
-
-    public Page<Plan> findAll(Pageable pageable) { return planRepository.findAll(pageable); }
 }

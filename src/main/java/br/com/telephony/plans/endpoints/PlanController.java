@@ -5,6 +5,7 @@ import br.com.telephony.plans.endpoints.dto.PlanDto;
 import br.com.telephony.plans.endpoints.form.UpdatePlanForm;
 import br.com.telephony.plans.endpoints.form.PlanForm;
 import br.com.telephony.plans.models.Plan;
+import br.com.telephony.plans.models.Type;
 import br.com.telephony.plans.models.converter.StringToEnumConverter;
 import br.com.telephony.plans.repository.DDDRepository;
 import br.com.telephony.plans.repository.CarrierRepository;
@@ -48,19 +49,22 @@ public class PlanController {
     public Page<PlanDto> list(
             @RequestParam(required = false) String carrier,
             @RequestParam(required = false) String type,
-            @PageableDefault(size = 2)Pageable pageable
+            @RequestParam Long ddd,
+            @PageableDefault(size = 5)Pageable pageable
     ){
 
         if(carrier!=null) {
-            Page<Plan> plans = new PageImpl<Plan>(planService.findByCarrierName(carrier));
+            Page<Plan> plans = new PageImpl<Plan>(planService.findByCarrierAndDDD(ddd, carrier));
             return PlanDto.converter(plans);
         }
         if(type!=null) {
-            Page<Plan> plans = new PageImpl<>(planService.findByType(new StringToEnumConverter().convert(type)));
+            Type typeEnum = new StringToEnumConverter().convert(type);
+            System.out.println(typeEnum.toString() + " " + ddd);
+            Page<Plan> plans = new PageImpl<>(planService.findByTypeAndDDD(ddd, typeEnum));
             return PlanDto.converter(plans);
         }
 
-        return PlanDto.converter(planService.findAll(pageable));
+        return PlanDto.converter(new PageImpl<>(planService.findByDDD(ddd)));
     }
 
 
