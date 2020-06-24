@@ -1,6 +1,5 @@
 package br.com.telephony.plans.endpoints;
 
-
 import br.com.telephony.plans.endpoints.dto.PlanDto;
 import br.com.telephony.plans.endpoints.form.UpdatePlanForm;
 import br.com.telephony.plans.endpoints.form.PlanForm;
@@ -43,7 +42,6 @@ public class PlanController {
         Optional<Plan> plan = planService.findById(id);
         return ResponseEntity.ok(new PlanDto(plan.get()));
     }
-
 
     @GetMapping
     public Page<PlanDto> list(
